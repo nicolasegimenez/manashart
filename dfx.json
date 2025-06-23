@@ -1,0 +1,26 @@
+{
+  "canisters": {
+    "manashart_backend": {
+      "main": "src/manashart_backend/main.mo",
+      "type": "motoko"
+    },
+    "manashart_frontend": {
+      "dependencies": [
+        "manashart_backend"
+      ],
+      "source": [
+        "src/manashart_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "manashart_frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
