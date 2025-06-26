@@ -8,11 +8,13 @@
       "dependencies": [
         "manashart_backend"
       ],
+      "frontend": {
+        "entrypoint": "src/manashart_frontend/dist/index.html"
+      },
       "source": [
         "src/manashart_frontend/dist"
       ],
-      "type": "assets",
-      "workspace": "manashart_frontend"
+      "type": "assets"
     }
   },
   "defaults": {
@@ -21,6 +23,11 @@
       "packtool": ""
     }
   },
-  "output_env_file": ".env",
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:4943",
+      "type": "ephemeral"
+    }
+  },
   "version": 1
 }

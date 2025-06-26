@@ -1,0 +1,32 @@
+{
+  "name": "manashart-tests",
+  "version": "1.0.0",
+  "description": "Testing suite for Manashart Web3 Music Platform",
+  "scripts": {
+    "test:backend": "dfx canister call test_runner runAllTests",
+    "test:frontend": "cd ../src/manashart_frontend && npm test",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:all": "./run-all-tests.sh",
+    "setup": "npm install && npx playwright install"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.53.1",
+    "@testing-library/jest-dom": "^6.1.4",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.5.1",
+    "@vitejs/plugin-react": "^4.1.1",
+    "jsdom": "^23.0.1",
+    "vitest": "^3.2.4"
+  },
+  "keywords": [
+    "web3",
+    "music",
+    "icp",
+    "motoko",
+    "react",
+    "testing"
+  ],
+  "author": "Manashart Team",
+  "license": "MIT"
+}
