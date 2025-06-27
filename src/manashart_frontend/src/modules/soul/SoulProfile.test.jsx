@@ -53,15 +53,18 @@ describe('SoulProfile Component', () => {
       render(<SoulProfile identity={mockIdentity} />);
 
       await waitFor(() => {
-        const usernameInput = screen.getByPlaceholderText('Enter username');
-        const createButton = screen.getByText('Create Profile');
-
-        fireEvent.change(usernameInput, { target: { value: 'TestUser' } });
-        fireEvent.click(createButton);
+        expect(screen.getByText('Create Your Soul Profile')).toBeInTheDocument();
       });
+
+      fireEvent.change(screen.getByPlaceholderText('Enter username'), {
+        target: { value: 'TestUser' },
+      });
+      fireEvent.click(screen.getByText('Create Profile'));
 
       await waitFor(() => {
         expect(mockActor.createSoulProfile).toHaveBeenCalledWith('TestUser');
+        expect(screen.getByText('Soul Profile')).toBeInTheDocument();
+        expect(screen.getByText('TestUser')).toBeInTheDocument();
       });
     });
 
@@ -74,12 +77,13 @@ describe('SoulProfile Component', () => {
       render(<SoulProfile identity={mockIdentity} />);
 
       await waitFor(() => {
-        const usernameInput = screen.getByPlaceholderText('Enter username');
-        const createButton = screen.getByText('Create Profile');
-
-        fireEvent.change(usernameInput, { target: { value: 'ExistingUser' } });
-        fireEvent.click(createButton);
+        expect(screen.getByText('Create Your Soul Profile')).toBeInTheDocument();
       });
+
+      fireEvent.change(screen.getByPlaceholderText('Enter username'), {
+        target: { value: 'ExistingUser' },
+      });
+      fireEvent.click(screen.getByText('Create Profile'));
 
       await waitFor(() => {
         expect(screen.getByText('Error: Profile already exists')).toBeInTheDocument();
@@ -117,7 +121,7 @@ describe('SoulProfile Component', () => {
       render(<SoulProfile identity={mockIdentity} />);
 
       await waitFor(() => {
-        const progressBar = screen.getByRole('progressbar', { hidden: true });
+        const progressBar = screen.getByRole('progressbar');
         expect(progressBar).toHaveStyle('width: 75%');
       });
     });
@@ -153,26 +157,30 @@ describe('SoulProfile Component', () => {
       render(<SoulProfile identity={mockIdentity} />);
 
       await waitFor(() => {
-        const unlockButtons = screen.getAllByText('Try to Unlock');
-        fireEvent.click(unlockButtons[0]); // Click the first unlock button (FLOW)
+        expect(screen.getByText('Soul Profile')).toBeInTheDocument();
       });
 
-      expect(mockActor.unlockModule).toHaveBeenCalledWith('FLOW');
+      const unlockButton = screen.getAllByText('Try to Unlock')[0];
+      fireEvent.click(unlockButton);
+
+      await waitFor(() => {
+        expect(mockActor.unlockModule).toHaveBeenCalledWith('FLOW');
+      });
     });
 
     it('should show alert on successful unlock', async () => {
       mockActor.getSoulProfile.mockResolvedValue([mockProfile]);
       mockActor.unlockModule.mockResolvedValue({ ok: 'FLOW unlocked!' });
-
-      // Mock window.alert
       const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
 
       render(<SoulProfile identity={mockIdentity} />);
 
       await waitFor(() => {
-        const unlockButtons = screen.getAllByText('Try to Unlock');
-        fireEvent.click(unlockButtons[0]); // Click the first unlock button (FLOW)
+        expect(screen.getByText('Soul Profile')).toBeInTheDocument();
       });
+
+      const unlockButton = screen.getAllByText('Try to Unlock')[0];
+      fireEvent.click(unlockButton);
 
       await waitFor(() => {
         expect(alertSpy).toHaveBeenCalledWith('FLOW unlocked!');
@@ -184,15 +192,16 @@ describe('SoulProfile Component', () => {
     it('should show error alert on failed unlock', async () => {
       mockActor.getSoulProfile.mockResolvedValue([mockProfile]);
       mockActor.unlockModule.mockResolvedValue({ err: 'Insufficient vibration level' });
-
       const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
 
       render(<SoulProfile identity={mockIdentity} />);
 
       await waitFor(() => {
-        const unlockButtons = screen.getAllByText('Try to Unlock');
-        fireEvent.click(unlockButtons[0]); // Click the first unlock button (FLOW)
+        expect(screen.getByText('Soul Profile')).toBeInTheDocument();
       });
+
+      const unlockButton = screen.getAllByText('Try to Unlock')[0];
+      fireEvent.click(unlockButton);
 
       await waitFor(() => {
         expect(alertSpy).toHaveBeenCalledWith('Insufficient vibration level');
@@ -213,6 +222,7 @@ describe('SoulProfile Component', () => {
 
     it('should handle actor creation failure', async () => {
       const { createActor } = await import('../../services/actor');
+      const originalCreateActor = createActor.getMockImplementation();
       createActor.mockResolvedValue(null);
 
       render(<SoulProfile identity={mockIdentity} />);
@@ -220,6 +230,9 @@ describe('SoulProfile Component', () => {
       await waitFor(() => {
         expect(screen.getByText('Error: Cannot connect to backend')).toBeInTheDocument();
       });
+
+      // Restore the original implementation
+      createActor.mockImplementation(originalCreateActor);
     });
 
     it('should handle profile loading errors', async () => {
@@ -228,7 +241,7 @@ describe('SoulProfile Component', () => {
       render(<SoulProfile identity={mockIdentity} />);
 
       await waitFor(() => {
-        expect(screen.getByText(/Network error/)).toBeInTheDocument();
+        expect(screen.getByText("Error: Network error")).toBeInTheDocument();
       });
     });
   });

@@ -122,9 +122,13 @@ export default function SoulProfile({ identity }) {
           <strong>Vibration Level:</strong> {Number(profile.vibration)}/100
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2.5">
-          <div 
-            className="bg-blue-600 h-2.5 rounded-full" 
-            style={{width: `${Number(profile.vibration)}%`}}
+          <div
+            className="bg-blue-600 h-2.5 rounded-full"
+            style={{ width: `${Number(profile.vibration)}%` }}
+            role="progressbar"
+            aria-valuenow={Number(profile.vibration)}
+            aria-valuemin="0"
+            aria-valuemax="100"
           ></div>
         </div>
         
