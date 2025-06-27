@@ -52,13 +52,17 @@ describe('ProjectManager Component', () => {
       render(<ProjectManager identity={mockIdentity} />);
 
       await waitFor(() => {
-        fireEvent.click(screen.getByText('New Project'));
+        expect(screen.getByText('New Project')).toBeInTheDocument();
       });
 
-      expect(screen.getByText('Create New Project')).toBeInTheDocument();
-      expect(screen.getByPlaceholderText('Project Title')).toBeInTheDocument();
-      expect(screen.getByPlaceholderText('Project Description')).toBeInTheDocument();
-      expect(screen.getByText('Tokenize this project')).toBeInTheDocument();
+      fireEvent.click(screen.getByText('New Project'));
+
+      await waitFor(() => {
+        expect(screen.getByText('Create New Project')).toBeInTheDocument();
+        expect(screen.getByPlaceholderText('Project Title')).toBeInTheDocument();
+        expect(screen.getByPlaceholderText('Project Description')).toBeInTheDocument();
+        expect(screen.getByText('Tokenize this project')).toBeInTheDocument();
+      });
     });
 
     it('should create a project with valid data', async () => {
@@ -78,21 +82,23 @@ describe('ProjectManager Component', () => {
       render(<ProjectManager identity={mockIdentity} />);
 
       await waitFor(() => {
-        fireEvent.click(screen.getByText('New Project'));
+        expect(screen.getByText('New Project')).toBeInTheDocument();
       });
 
-      const titleInput = screen.getByPlaceholderText('Project Title');
-      const descInput = screen.getByPlaceholderText('Project Description');
-      const tokenizeCheckbox = screen.getByRole('checkbox');
-      const createButton = screen.getByText('Create Project');
+      fireEvent.click(screen.getByText('New Project'));
 
-      fireEvent.change(titleInput, { target: { value: 'My Album' } });
-      fireEvent.change(descInput, { target: { value: 'A great album' } });
-      fireEvent.click(tokenizeCheckbox);
-      fireEvent.click(createButton);
+      await waitFor(() => {
+        expect(screen.getByText('Create New Project')).toBeInTheDocument();
+      });
+
+      fireEvent.change(screen.getByPlaceholderText('Project Title'), { target: { value: 'My Album' } });
+      fireEvent.change(screen.getByPlaceholderText('Project Description'), { target: { value: 'A great album' } });
+      fireEvent.click(screen.getByRole('checkbox'));
+      fireEvent.click(screen.getByText('Create Project'));
 
       await waitFor(() => {
         expect(mockActor.createProject).toHaveBeenCalledWith('My Album', 'A great album', true);
+        expect(screen.getByText('My Album')).toBeInTheDocument();
       });
     });
 
@@ -102,14 +108,20 @@ describe('ProjectManager Component', () => {
       render(<ProjectManager identity={mockIdentity} />);
 
       await waitFor(() => {
-        fireEvent.click(screen.getByText('New Project'));
+        expect(screen.getByText('New Project')).toBeInTheDocument();
       });
 
-      const createButton = screen.getByText('Create Project');
-      fireEvent.click(createButton);
+      fireEvent.click(screen.getByText('New Project'));
 
-      // Should not call the actor if title is empty
-      expect(mockActor.createProject).not.toHaveBeenCalled();
+      await waitFor(() => {
+        expect(screen.getByText('Create New Project')).toBeInTheDocument();
+      });
+
+      fireEvent.click(screen.getByText('Create Project'));
+
+      await waitFor(() => {
+        expect(mockActor.createProject).not.toHaveBeenCalled();
+      });
     });
 
     it('should handle project creation errors', async () => {
@@ -123,14 +135,17 @@ describe('ProjectManager Component', () => {
       render(<ProjectManager identity={mockIdentity} />);
 
       await waitFor(() => {
-        fireEvent.click(screen.getByText('New Project'));
+        expect(screen.getByText('New Project')).toBeInTheDocument();
       });
 
-      const titleInput = screen.getByPlaceholderText('Project Title');
-      const createButton = screen.getByText('Create Project');
+      fireEvent.click(screen.getByText('New Project'));
 
-      fireEvent.change(titleInput, { target: { value: 'Test Project' } });
-      fireEvent.click(createButton);
+      await waitFor(() => {
+        expect(screen.getByText('Create New Project')).toBeInTheDocument();
+      });
+
+      fireEvent.change(screen.getByPlaceholderText('Project Title'), { target: { value: 'Test Project' } });
+      fireEvent.click(screen.getByText('Create Project'));
 
       await waitFor(() => {
         expect(alertSpy).toHaveBeenCalledWith('Error: Soul profile not found');
@@ -233,14 +248,20 @@ describe('ProjectManager Component', () => {
       render(<ProjectManager identity={mockIdentity} />);
 
       await waitFor(() => {
-        fireEvent.click(screen.getByText('New Project'));
+        expect(screen.getByText('New Project')).toBeInTheDocument();
       });
 
-      expect(screen.getByText('Create New Project')).toBeInTheDocument();
+      fireEvent.click(screen.getByText('New Project'));
+
+      await waitFor(() => {
+        expect(screen.getByText('Create New Project')).toBeInTheDocument();
+      });
 
       fireEvent.click(screen.getByText('Cancel'));
 
-      expect(screen.queryByText('Create New Project')).not.toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.queryByText('Create New Project')).not.toBeInTheDocument();
+      });
     });
 
     it('should reset form after successful creation', async () => {
@@ -260,19 +281,22 @@ describe('ProjectManager Component', () => {
       render(<ProjectManager identity={mockIdentity} />);
 
       await waitFor(() => {
-        fireEvent.click(screen.getByText('New Project'));
+        expect(screen.getByText('New Project')).toBeInTheDocument();
       });
 
-      const titleInput = screen.getByPlaceholderText('Project Title');
-      const descInput = screen.getByPlaceholderText('Project Description');
-      const createButton = screen.getByText('Create Project');
+      fireEvent.click(screen.getByText('New Project'));
 
-      fireEvent.change(titleInput, { target: { value: 'Test Project' } });
-      fireEvent.change(descInput, { target: { value: 'Test Description' } });
-      fireEvent.click(createButton);
+      await waitFor(() => {
+        expect(screen.getByText('Create New Project')).toBeInTheDocument();
+      });
+
+      fireEvent.change(screen.getByPlaceholderText('Project Title'), { target: { value: 'Test Project' } });
+      fireEvent.change(screen.getByPlaceholderText('Project Description'), { target: { value: 'Test Description' } });
+      fireEvent.click(screen.getByText('Create Project'));
 
       await waitFor(() => {
         expect(screen.queryByText('Create New Project')).not.toBeInTheDocument();
+        expect(screen.getByText('Test Project')).toBeInTheDocument();
       });
     });
   });
