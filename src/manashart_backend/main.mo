@@ -117,22 +117,34 @@ actor Manashart {
         
         // Check if user has FLOW module access
         switch (soulProfiles.get(caller)) {
-            case null { #err("Soul profile not found") };
-            case (?_profile) {
-                let projectId = Principal.toText(caller) # "_" # Int.toText(Time.now());
-                let newProject : Project = {
-                    id = projectId;
-                    owner = caller;
-                    title = title;
-                    description = description;
-                    tokenized = tokenized;
-                    venue = null;
-                    services = [];
-                    budget = 0;
-                    status = #Planning;
+            case null { return #err("Soul profile not found") };
+            case (?profile) {
+                let flowModule = Array.find<ModuleAccess>(
+                    profile.modules,
+                    func(m) = m.name == "FLOW"
+                );
+
+                switch (flowModule) {
+                    case null { return #err("FLOW module not found in profile") };
+                    case (?flowMod) {
+                        if (not flowMod.enabled) { return #err("FLOW module is not enabled") };
+
+                        let projectId = Principal.toText(caller) # "_" # Int.toText(Time.now());
+                        let newProject : Project = {
+                            id = projectId;
+                            owner = caller;
+                            title = title;
+                            description = description;
+                            tokenized = tokenized;
+                            venue = null;
+                            services = [];
+                            budget = 0;
+                            status = #Planning;
+                        };
+                        projectsMap.put(projectId, newProject);
+                        return #ok(newProject)
+                    };
                 };
-                projectsMap.put(projectId, newProject);
-                #ok(newProject)
             };
         }
     };
@@ -189,9 +201,7 @@ actor Manashart {
     };
 
     // Update vibration level (for testing)
-    public shared(msg) func updateVibration(newVibration: Nat) : async Result.Result<Text, Text> {
-        let caller = msg.caller;
-        
+    private func updateVibration(caller: Principal, newVibration: Nat) : async Result.Result<Text, Text> {
         switch (soulProfiles.get(caller)) {
             case null { #err("Soul profile not found") };
             case (?profile) {
