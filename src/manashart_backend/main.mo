@@ -86,7 +86,7 @@ actor Manashart {
                 let newProfile : SoulProfile = {
                     id = caller;
                     username = username;
-                    vibration = 50; // Start at middle vibration
+                    vibration = 65; // Start with enough vibration to unlock FLOW and WALLET
                     avatar = null;
                     createdAt = Time.now();
                     modules = [

@@ -11,3 +11,18 @@ body {
   -moz-osx-font-smoothing: grayscale;
   @apply bg-slate-950 text-white;
 }
+
+/* Fix para hacer visible el texto en formularios */
+input, textarea, select {
+  color: #1f2937 !important; /* texto oscuro */
+  background-color: white !important; /* fondo blanco */
+}
+
+input::placeholder, textarea::placeholder {
+  color: #6b7280 !important; /* placeholder gris */
+}
+
+/* Solución alternativa con Tailwind */
+.form-input {
+  @apply text-gray-900 bg-white placeholder-gray-500;
+}

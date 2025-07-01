@@ -18,6 +18,21 @@ export const createActor = async (identity) => {
       principal: identity?.getPrincipal?.()?.toString?.() || "no principal",
     });
 
+    // Verificar que la identidad no sea anónima ni parcial
+    if (!identity) {
+      throw new Error("Identity is required");
+    }
+    
+    const principal = identity.getPrincipal();
+    if (principal.isAnonymous()) {
+      throw new Error("Cannot use anonymous identity for authenticated calls");
+    }
+    
+    debugLog("Identity validation passed", {
+      principalId: principal.toString(),
+      isAnonymous: principal.isAnonymous(),
+    });
+
     const host =
       process.env.DFX_NETWORK === "ic"
         ? "https://ic0.app"
@@ -31,8 +46,13 @@ export const createActor = async (identity) => {
 
     if (process.env.DFX_NETWORK !== "ic") {
       debugLog("Fetching root key for local development...");
-      await agent.fetchRootKey();
-      debugLog("Root key fetched successfully.");
+      try {
+        await agent.fetchRootKey();
+        debugLog("Root key fetched successfully.");
+      } catch (error) {
+        debugLog("Root key fetch failed (may already be fetched)", error.message);
+        // Continuar si ya está fetched
+      }
     }
 
     debugLog("Creating actor with configured agent...");

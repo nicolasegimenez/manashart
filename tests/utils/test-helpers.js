@@ -5,7 +5,6 @@ export const mockIdentity = {
     toString: () => 'test-principal-id',
     toText: () => 'test-principal-id',
   }),
-  transformRequest: (request) => request,
 };
 
 export const mockProfile = {

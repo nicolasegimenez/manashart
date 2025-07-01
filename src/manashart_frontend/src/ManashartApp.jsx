@@ -8,6 +8,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { AuthClient } from '@dfinity/auth-client';
 import { Principal } from '@dfinity/principal';
+import { Ed25519KeyIdentity } from '@dfinity/identity';
 import { createActor } from './services/actor';
 import SoulProfile from './modules/soul/SoulProfile';
 import ProjectManager from './modules/flow/ProjectManager';
@@ -250,21 +251,18 @@ const ManashartApp = () => {
       setConnectionStatus('connecting');
       
       // Create test identity for local development
-      const testPrincipalText = "wglbq-n3s36-eqjnp-3yc2v-cncyg-h3lts-cae2k-dy56r-ptabd-x3xv3-dae";
-      debugLog('Creating test principal', { principalText: testPrincipalText });
+      debugLog('Creating test identity for local development...');
       
-      const testPrincipal = Principal.fromText(testPrincipalText);
-      const testIdentity = {
-        getPrincipal: () => testPrincipal
-      };
+      // Generate a proper Ed25519 identity for testing
+      const testIdentity = Ed25519KeyIdentity.generate();
       debugLog('Test identity created', { 
-        principal: testPrincipal.toString(),
+        principal: testIdentity.getPrincipal().toString(),
         identityType: typeof testIdentity
       });
       
       // Create actor
       debugLog('Creating actor instance...');
-      const actorInstance = await createActor();
+      const actorInstance = await createActor(testIdentity);
       debugLog('Actor creation result', { 
         actorExists: !!actorInstance,
         actorType: typeof actorInstance
@@ -1129,7 +1127,7 @@ const ManashartApp = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950/10 to-slate-950 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950/10 to-slate-950">
       {/* Sidebar Overlay */}
       {sidebarOpen && (
         <div 
