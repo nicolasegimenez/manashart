@@ -1,3 +1,22 @@
+#!/bin/bash
+
+# CREATE MINIMAL BRANCH WITH UNIVERSE, SOUL & FLOW
+# ================================================
+
+echo "🌟 Creating Minimal Manashart Branch"
+echo "==================================="
+echo "Modules to keep: Universe, Soul, Flow"
+echo ""
+
+# 1. Create and checkout new branch
+echo "📝 Creating new branch..."
+git checkout -b minimal-universe-soul-flow
+echo "✅ Branch created and checked out"
+
+# 2. Create modified ManashartApp.jsx
+echo ""
+echo "🔧 Modifying ManashartApp.jsx..."
+cat > src/manashart_frontend/src/ManashartApp.jsx << 'EOF'
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { Actor, HttpAgent } from '@dfinity/agent';
@@ -341,3 +360,233 @@ const ModuleWrapper = ({ module, isAuthenticated, actor, userProfile, refreshPro
 };
 
 export default ManashartApp;
+EOF
+
+echo "✅ ManashartApp.jsx updated with only Universe, Soul, and Flow"
+
+# 3. Update Universe.jsx to only show these three modules
+echo ""
+echo "🔧 Updating Universe.jsx..."
+cat > src/manashart_frontend/src/modules/Universe.jsx << 'EOF'
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Home, User, Briefcase } from 'lucide-react';
+
+const Universe = ({ userProfile }) => {
+  const navigate = useNavigate();
+
+  const modules = [
+    {
+      name: 'Soul',
+      icon: User,
+      path: '/soul',
+      color: 'from-pink-500 to-purple-500',
+      description: 'Your digital identity',
+      vibrationRequired: 0,
+      size: 'large'
+    },
+    {
+      name: 'Flow',
+      icon: Briefcase,
+      path: '/flow',
+      color: 'from-blue-500 to-cyan-500',
+      description: 'Creative projects',
+      vibrationRequired: 60,
+      size: 'large'
+    }
+  ];
+
+  const userVibration = userProfile?.vibration || 0;
+
+  return (
+    <div className="min-h-screen flex items-center justify-center p-8">
+      <div className="relative">
+        {/* Central Universe Hub */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+          <div className="w-32 h-32 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full flex items-center justify-center shadow-2xl animate-pulse">
+            <Home className="w-16 h-16 text-white" />
+          </div>
+          <p className="text-center mt-4 text-white font-bold">UNIVERSE</p>
+        </div>
+
+        {/* Orbiting Modules */}
+        <div className="relative w-[500px] h-[500px]">
+          {modules.map((module, index) => {
+            const Icon = module.icon;
+            const isLocked = userVibration < module.vibrationRequired;
+            const angle = (index * 180) - 90; // Position at 180 degrees apart
+            const radius = 200;
+            const x = Math.cos((angle * Math.PI) / 180) * radius;
+            const y = Math.sin((angle * Math.PI) / 180) * radius;
+
+            return (
+              <div
+                key={module.name}
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                style={{
+                  transform: `translate(${x}px, ${y}px) translate(-50%, -50%)`
+                }}
+              >
+                <button
+                  onClick={() => !isLocked && navigate(module.path)}
+                  disabled={isLocked}
+                  className={`
+                    relative group transition-all duration-300
+                    ${isLocked ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110 cursor-pointer'}
+                  `}
+                >
+                  <div className={`
+                    w-24 h-24 rounded-full flex items-center justify-center
+                    bg-gradient-to-br ${module.color}
+                    ${!isLocked && 'shadow-lg hover:shadow-2xl'}
+                  `}>
+                    <Icon className="w-12 h-12 text-white" />
+                  </div>
+                  
+                  <div className="text-center mt-2">
+                    <p className="text-white font-semibold">{module.name}</p>
+                    <p className="text-white/60 text-xs">{module.description}</p>
+                    {isLocked && (
+                      <p className="text-red-400 text-xs mt-1">
+                        Requires {module.vibrationRequired}Hz
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Orbit line */}
+                  <svg
+                    className="absolute top-1/2 left-1/2 -z-10"
+                    style={{
+                      transform: `translate(-50%, -50%) translate(${-x}px, ${-y}px)`,
+                      width: Math.abs(x) * 2 + 100,
+                      height: Math.abs(y) * 2 + 100,
+                    }}
+                  >
+                    <line
+                      x1="50%"
+                      y1="50%"
+                      x2={`${50 + (x / 4)}%`}
+                      y2={`${50 + (y / 4)}%`}
+                      stroke="rgba(255, 255, 255, 0.2)"
+                      strokeWidth="2"
+                      strokeDasharray="5 5"
+                    />
+                  </svg>
+                </button>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* User Info */}
+        {userProfile && (
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-center">
+            <p className="text-white/70">
+              Current Vibration: <span className="text-purple-400 font-bold">{userVibration}Hz</span>
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Universe;
+EOF
+
+echo "✅ Universe.jsx updated"
+
+# 4. Create a simplified README for this branch
+echo ""
+echo "📝 Creating README for minimal branch..."
+cat > README-minimal.md << 'EOF'
+# Manashart Minimal - Universe, Soul & Flow
+
+This is a simplified version of Manashart focusing on the core three modules:
+
+## 🌟 Active Modules
+
+1. **Universe** (0 Hz) - Central navigation hub
+2. **Soul** (0 Hz) - User profile and identity
+3. **Flow** (60 Hz) - Project management
+
+## 🚀 Quick Start
+
+```bash
+# Install dependencies
+npm install
+
+# Start local IC network
+dfx start --clean --background
+
+# Deploy canisters
+dfx deploy
+
+# Start frontend
+npm start
+```
+
+## 📋 Features in this Branch
+
+- ✅ Simplified navigation with only 3 modules
+- ✅ Clean UI focused on core functionality
+- ✅ All authentication and backend features intact
+- ✅ Vibration system active (Flow requires 60Hz)
+
+## 🔧 Disabled Modules
+
+The following modules are disabled in this branch:
+- Store
+- Wallet
+- Stream
+- Invest
+- Connect
+- DAO
+
+To re-enable them, switch back to the main branch.
+
+## 🎯 Purpose
+
+This minimal version is perfect for:
+- Initial development and testing
+- MVP demonstrations
+- Understanding the core architecture
+- Focused feature development
+
+## 🔄 Switching Back
+
+To return to the full version:
+```bash
+git checkout main
+```
+EOF
+
+echo "✅ README-minimal.md created"
+
+# 5. Commit changes
+echo ""
+echo "📝 Committing changes..."
+git add -A
+git commit -m "feat: Create minimal version with Universe, Soul and Flow only
+
+- Simplified ManashartApp.jsx to include only 3 modules
+- Updated Universe.jsx to show only Soul and Flow orbits
+- Removed references to other modules
+- Maintained all core functionality
+- Added README-minimal.md for branch documentation"
+
+echo ""
+echo "✨ MINIMAL BRANCH CREATED! ✨"
+echo "=========================="
+echo ""
+echo "Current branch: minimal-universe-soul-flow"
+echo "Active modules: Universe, Soul, Flow"
+echo ""
+echo "Next steps:"
+echo "1. Restart your development server: npm start"
+echo "2. The app will now show only the 3 core modules"
+echo "3. Flow still requires 60Hz vibration to unlock"
+echo ""
+echo "To switch back to full version: git checkout main"
+echo ""
+echo "Happy coding! 🚀"

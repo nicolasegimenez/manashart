@@ -201,7 +201,7 @@ actor Manashart {
     };
 
     // Update vibration level (for testing)
-    private func updateVibration(caller: Principal, newVibration: Nat) : async Result.Result<Text, Text> {
+    private func _updateVibration(caller: Principal, newVibration: Nat) : async Result.Result<Text, Text> {
         switch (soulProfiles.get(caller)) {
             case null { #err("Soul profile not found") };
             case (?profile) {

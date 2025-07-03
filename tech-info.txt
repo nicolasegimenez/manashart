@@ -1,0 +1,153 @@
+📦 GATHERING TECHNICAL INFORMATION...
+
+🔧 ENVIRONMENT CONFIGURATION:
+==============================
+NODE_VERSION=v20.19.3
+NPM_VERSION=10.8.2
+DFX_VERSION=dfx 0.27.0
+RUST_VERSION=rustc 1.83.0 (90b35a623 2024-11-26)
+
+🌐 INTERNET COMPUTER SETUP:
+==============================
+DFX_NETWORK=local
+IC_URL=http://localhost:4943
+DFX_STATUS=Stopped
+
+📍 CANISTER IDENTIFIERS:
+==============================
+CANISTER_IDS_LOCAL={
+  "__Candid_UI": {
+    "local": "uzt4z-lp777-77774-qaabq-cai"
+  },
+  "manashart_backend": {
+    "local": "uxrrr-q7777-77774-qaaaq-cai"
+  },
+  "manashart_frontend": {
+    "local": "u6s2n-gx777-77774-qaaba-cai"
+  }
+}
+CANISTER_ID_MANASHART_BACKEND=
+CANISTER_ID_MANASHART_FRONTEND=
+
+📚 PROJECT DEPENDENCIES:
+==============================
+# Root dependencies:
+
+# Frontend dependencies:
+## Runtime:
+@dfinity/agent ^2.4.1
+@dfinity/auth-client ^2.4.1
+@dfinity/candid ^2.4.1
+@dfinity/identity ^2.4.1
+@dfinity/principal ^2.4.1
+lucide-react ^0.292.0
+react ^18.2.0
+react-dom ^18.2.0
+react-router-dom ^6.21.1
+devDependencies
+@testing-library/jest-dom ^6.1.4
+@testing-library/react ^13.4.0
+@testing-library/user-event ^14.5.1
+@types/react ^18.2.45
+@types/react-dom ^18.2.18
+@vitejs/plugin-react ^4.2.1
+autoprefixer ^10.4.16
+jsdom ^23.0.1
+postcss ^8.4.32
+
+## Dev:
+@testing-library/jest-dom ^6.1.4
+@testing-library/react ^13.4.0
+@testing-library/user-event ^14.5.1
+@types/react ^18.2.45
+@types/react-dom ^18.2.18
+@vitejs/plugin-react ^4.2.1
+autoprefixer ^10.4.16
+jsdom ^23.0.1
+postcss ^8.4.32
+tailwindcss ^3.4.0
+vite ^6.3.5
+vitest ^3.2.4
+
+🌿 GIT STATUS:
+==============================
+CURRENT_BRANCH=main
+LAST_COMMIT=5501fe5 - fix: Resolve identity and UI visibility issues
+UNCOMMITTED_CHANGES=4
+
+💻 SYSTEM RESOURCES:
+==============================
+OS=Linux
+ARCH=x86_64
+FREE_DISK=420G
+MEMORY=5,7Gi
+
+🔌 PORT STATUS:
+==============================
+PORT_4943=Available
+PORT_5173=Available
+PORT_8000=Available
+
+📁 PROJECT STRUCTURE:
+==============================
+PROJECT_ROOT=/home/nico/manashart-icp/manashart
+BACKEND_DIR=src/manashart_backend
+FRONTEND_DIR=src/manashart_frontend
+TEST_DIR=tests
+
+📄 KEY FILES PRESENT:
+✓ dfx.json
+✓ package.json
+✓ main.mo
+✓ main.jsx
+✗ vessel packages
+
+🔐 AUTHENTICATION:
+==============================
+INTERNET_IDENTITY_URL=https://identity.ic0.app
+II_CANISTER_ID=rdmx6-jaaaa-aaaaa-aaadq-cai
+
+🧪 TESTING CONFIGURATION:
+==============================
+✓ Vitest configured
+✓ Test directory exists
+✗ Playwright not configured
+
+🏗️ BUILD SETTINGS:
+==============================
+✓ Vite config present
+✓ Tailwind configured
+✓ PostCSS configured
+
+🐛 RECENT ERRORS:
+==============================
+
+📝 USEFUL COMMANDS FOR DEVELOPMENT:
+==============================
+# Start local development:
+dfx start --clean --background
+dfx deploy
+npm start
+
+# Check canister status:
+dfx canister status --all
+
+# View canister logs:
+dfx canister logs manashart_backend
+
+# Test backend functions:
+dfx canister call manashart_backend getProfile
+
+# Build production:
+npm run build
+dfx deploy --network ic
+
+# Run tests:
+npm test
+npm run test:e2e
+
+# Generate declarations:
+dfx generate
+
+✅ TECH REQUIREMENTS GATHERING COMPLETE!
+This information helps me understand your development environment better.
