@@ -10,7 +10,7 @@
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
-    "generate": "dfx generate manashart_backend",
+    "generate": "dfx generate manashart_minimal_backend",
     "start:minimal": "vite --mode minimal",
     "build:minimal": "vite build --mode minimal",
     "test:minimal": "vitest --grep minimal"

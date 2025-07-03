@@ -1,12 +1,12 @@
 {
   "canisters": {
-    "manashart_backend": {
-      "main": "src/manashart_backend/main.mo",
+    "manashart_minimal_backend": {
+      "main": "src/manashart_backend/minimal.mo",
       "type": "motoko"
     },
     "manashart_frontend": {
       "dependencies": [
-        "manashart_backend"
+        "manashart_minimal_backend"
       ],
       "frontend": {
         "entrypoint": "src/manashart_frontend/dist/index.html"

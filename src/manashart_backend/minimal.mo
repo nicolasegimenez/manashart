@@ -2,6 +2,8 @@ import Principal "mo:base/Principal";
 import Text "mo:base/Text";
 import Result "mo:base/Result";
 import Time "mo:base/Time";
+import Nat "mo:base/Nat";
+import Int "mo:base/Int";
 
 // Minimal version focusing on Soul and Flow modules only
 actor ManashartMinimal {
@@ -76,7 +78,7 @@ actor ManashartMinimal {
         version: Text;
         modules: [Text];
     } {
-        {
+        return {
             name = "Manashart Minimal";
             version = "0.1.0";
             modules = ["Universe", "Soul", "Flow"];

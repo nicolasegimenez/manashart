@@ -2,7 +2,7 @@ import { Actor, HttpAgent } from "@dfinity/agent";
 import {
   canisterId,
   createActor as createBackendActor,
-} from "../../../declarations/manashart_backend";
+} from "../../../declarations/manashart_minimal_backend";
 
 const debugLog = (message, data = null) => {
   const timestamp = new Date().toLocaleTimeString();

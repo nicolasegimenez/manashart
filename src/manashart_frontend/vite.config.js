@@ -17,6 +17,6 @@ export default defineConfig({
   },
   define: {
     'process.env.DFX_NETWORK': JSON.stringify(process.env.DFX_NETWORK || 'local'),
-    'process.env.MANASHART_BACKEND_CANISTER_ID': JSON.stringify(process.env.MANASHART_BACKEND_CANISTER_ID),
+    'process.env.MANASHART_MINIMAL_BACKEND_CANISTER_ID': JSON.stringify(process.env.MANASHART_MINIMAL_BACKEND_CANISTER_ID),
   }
 })
