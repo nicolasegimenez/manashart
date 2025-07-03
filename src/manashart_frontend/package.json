@@ -10,7 +10,10 @@
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
-    "generate": "dfx generate manashart_backend"
+    "generate": "dfx generate manashart_backend",
+    "start:minimal": "vite --mode minimal",
+    "build:minimal": "vite build --mode minimal",
+    "test:minimal": "vitest --grep minimal"
   },
   "dependencies": {
     "@dfinity/agent": "^2.4.1",

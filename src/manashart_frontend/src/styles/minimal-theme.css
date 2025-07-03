@@ -1,0 +1,84 @@
+/* Minimal Manashart Theme */
+:root {
+  /* Core Colors */
+  --universe-primary: #9B59B6;
+  --universe-secondary: #3498DB;
+  
+  --soul-primary: #E91E63;
+  --soul-secondary: #9C27B0;
+  
+  --flow-primary: #2196F3;
+  --flow-secondary: #00BCD4;
+  
+  /* Neutral Colors */
+  --bg-dark: #0F0F0F;
+  --bg-medium: #1A1A1A;
+  --bg-light: #2A2A2A;
+  
+  --text-primary: #FFFFFF;
+  --text-secondary: #B0B0B0;
+  --text-dim: #707070;
+  
+  /* Effects */
+  --glow-universe: 0 0 30px rgba(155, 89, 182, 0.5);
+  --glow-soul: 0 0 30px rgba(233, 30, 99, 0.5);
+  --glow-flow: 0 0 30px rgba(33, 150, 243, 0.5);
+}
+
+/* Simplified animations */
+@keyframes orbit {
+  from { transform: rotate(0deg) translateX(200px) rotate(0deg); }
+  to { transform: rotate(360deg) translateX(200px) rotate(-360deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+/* Module-specific styles */
+.module-universe {
+  background: linear-gradient(135deg, var(--universe-primary), var(--universe-secondary));
+  box-shadow: var(--glow-universe);
+}
+
+.module-soul {
+  background: linear-gradient(135deg, var(--soul-primary), var(--soul-secondary));
+  box-shadow: var(--glow-soul);
+}
+
+.module-flow {
+  background: linear-gradient(135deg, var(--flow-primary), var(--flow-secondary));
+  box-shadow: var(--glow-flow);
+}
+
+/* Clean card design */
+.minimal-card {
+  background: var(--bg-medium);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+
+.minimal-card:hover {
+  background: var(--bg-light);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Vibration indicator */
+.vibration-display {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  font-variant-numeric: tabular-nums;
+}
+
+.vibration-display::before {
+  content: "〰️";
+  animation: pulse-glow 2s ease-in-out infinite;
+}
