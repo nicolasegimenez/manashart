@@ -35,17 +35,14 @@ const Login = ({ setIsAuthenticated }) => {
               placeholder="******************"
             />
           </div>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-center mt-6">
             <button
-              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-all"
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-3 px-6 rounded-xl focus:outline-none focus:shadow-outline transition-all duration-200 transform hover:scale-105"
               type="button"
               onClick={handleLogin}
             >
               Sign In
             </button>
-            <a className="inline-block align-baseline font-bold text-sm text-purple-400 hover:text-purple-200" href="#">
-              Forgot Password?
-            </a>
           </div>
         </form>
       </div>

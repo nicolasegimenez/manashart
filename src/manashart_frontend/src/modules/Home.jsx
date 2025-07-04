@@ -7,7 +7,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 flex items-center justify-center p-6">
-      <div className="text-center">
+      <div className="text-center p-8 rounded-xl shadow-2xl shadow-purple-500/50 bg-gray-900/30 backdrop-blur-sm">
         <div className="w-32 h-32 mx-auto bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl flex items-center justify-center mb-8">
           <Sparkles className="w-16 h-16 text-white" />
         </div>

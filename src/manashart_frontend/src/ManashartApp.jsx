@@ -1,13 +1,82 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { Actor, HttpAgent } from '@dfinity/agent';
 import { AuthClient } from '@dfinity/auth-client';
 import { idlFactory } from '../../declarations/manashart_backend';
 import Universe from './modules/Universe';
 import SoulProfile from './modules/SoulProfile';
 import ProjectManager from './modules/ProjectManager';
+import CryptoTickets from './modules/CryptoTickets';
 import Debug from './components/Debug';
-import { Home, User, Briefcase } from 'lucide-react';
+import { Home, User, Briefcase, Ticket } from 'lucide-react';
+
+// Navigation Card Component
+const NavigationCard = ({ module, Icon, isLocked, userVibration }) => {
+  const navigate = useNavigate();
+  
+  return (
+    <button
+      onClick={() => !isLocked && navigate(module.path)}
+      disabled={isLocked}
+      className={`
+        relative p-6 rounded-xl transition-all duration-300 ease-in-out
+        ${isLocked 
+          ? 'bg-gray-800/50 opacity-50 cursor-not-allowed border border-gray-700' 
+          : `bg-gradient-to-br ${module.gradient} border border-white/10 hover:border-white/20 hover:scale-105 hover:-translate-y-0.5 cursor-pointer`
+        }
+      `}
+    >
+      <Icon className="w-8 h-8 mb-2 text-white" />
+      <h3 className="text-white font-semibold">{module.name}</h3>
+      <p className="text-white/70 text-xs mt-1">{module.description}</p>
+      
+      {isLocked && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-xl">
+          <div className="text-center">
+            <p className="text-white/70 text-sm">Requires {module.vibrationRequired}Hz</p>
+            <p className="text-white/50 text-xs">Current: {userVibration}Hz</p>
+          </div>
+        </div>
+      )}
+    </button>
+  );
+};
+
+// Module Wrapper Component
+const ModuleWrapper = ({ module, isAuthenticated, actor, userProfile, refreshProfile }) => {
+  const Component = module.component;
+  
+  if (!isAuthenticated) {
+    return (
+      <div className="text-center py-20">
+        <h2 className="text-3xl font-bold text-white mb-4">Authentication Required</h2>
+        <p className="text-white/70">Please login to access {module.name}</p>
+      </div>
+    );
+  }
+  
+  if (userProfile && userProfile.vibration < module.vibrationRequired) {
+    return (
+      <div className="text-center py-20">
+        <h2 className="text-3xl font-bold text-white mb-4">Insufficient Vibration</h2>
+        <p className="text-white/70">
+          You need {module.vibrationRequired}Hz to access {module.name}
+        </p>
+        <p className="text-white/50 mt-2">
+          Current vibration: {userProfile.vibration}Hz
+        </p>
+      </div>
+    );
+  }
+  
+  return (
+    <Component 
+      actor={actor} 
+      userProfile={userProfile}
+      refreshProfile={refreshProfile}
+    />
+  );
+};
 
 const ManashartApp = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -19,12 +88,12 @@ const ManashartApp = () => {
   const [showDebug, setShowDebug] = useState(false);
   const [activityLog, setActivityLog] = useState([]);
 
-  // Define only the three modules we need
+  // Define the four modules we need
   const modules = [
     {
       name: 'Universe',
       icon: Home,
-      path: '/',
+      path: '/app/',
       gradient: 'from-purple-600 to-blue-600',
       vibrationRequired: 0,
       component: Universe,
@@ -33,7 +102,7 @@ const ManashartApp = () => {
     {
       name: 'Soul',
       icon: User,
-      path: '/soul',
+      path: '/app/soul',
       gradient: 'from-pink-600 to-purple-600',
       vibrationRequired: 0,
       component: SoulProfile,
@@ -42,11 +111,20 @@ const ManashartApp = () => {
     {
       name: 'Flow',
       icon: Briefcase,
-      path: '/flow',
+      path: '/app/flow',
       gradient: 'from-blue-600 to-cyan-600',
       vibrationRequired: 60,
       component: ProjectManager,
       description: 'Manage your creative projects'
+    },
+    {
+      name: 'Tickets',
+      icon: Ticket,
+      path: '/app/tickets',
+      gradient: 'from-green-600 to-teal-600',
+      vibrationRequired: 40,
+      component: CryptoTickets,
+      description: 'Buy event tickets with crypto'
     }
   ];
 
@@ -98,7 +176,7 @@ const ManashartApp = () => {
       }
 
       const canisterId = process.env.CANISTER_ID_MANASHART_BACKEND || 
-                        (await import('../../declarations/manashart_backend').then(m => m.canisterId));
+                        (await import('../../declarations/manashart_backend/index.js').then(m => m.canisterId));
       
       const actor = Actor.createActor(idlFactory, {
         agent,
@@ -167,8 +245,18 @@ const ManashartApp = () => {
     addActivity('Logged out successfully', 'info');
   };
 
+  const handleFakeLogin = () => {
+    setIsAuthenticated(true);
+    const fakeProfile = { username: "FakeUser", vibration: 99 };
+    setUserProfile(fakeProfile);
+    const mockActor = {
+      getProfile: async () => [fakeProfile]
+    };
+    setActor(mockActor);
+    addActivity('Fake login successful', 'success');
+  };
+
   return (
-    <Router>
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
         {/* Navigation Header */}
         <nav className="bg-black/30 backdrop-blur-xl border-b border-white/10">
@@ -193,6 +281,15 @@ const ManashartApp = () => {
                 >
                   {isLoading ? 'Loading...' : isAuthenticated ? 'Logout' : 'Login'}
                 </button>
+
+                {!isAuthenticated && !isLoading && (
+                  <button
+                    onClick={handleFakeLogin}
+                    className="px-4 py-2 bg-gradient-to-r from-green-600 to-blue-600 text-white rounded-lg hover:opacity-90 transition-opacity"
+                  >
+                    Fake Login
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -227,21 +324,54 @@ const ManashartApp = () => {
           )}
           
           <Routes>
-            {modules.map((module) => (
-              <Route
-                key={module.path}
-                path={module.path}
-                element={
-                  <ModuleWrapper
-                    module={module}
-                    isAuthenticated={isAuthenticated}
-                    actor={actor}
-                    userProfile={userProfile}
-                    refreshProfile={() => fetchUserProfile(actor)}
-                  />
-                }
-              />
-            ))}
+            <Route
+              path="/"
+              element={
+                <ModuleWrapper
+                  module={modules[0]}
+                  isAuthenticated={isAuthenticated}
+                  actor={actor}
+                  userProfile={userProfile}
+                  refreshProfile={() => fetchUserProfile(actor)}
+                />
+              }
+            />
+            <Route
+              path="/soul"
+              element={
+                <ModuleWrapper
+                  module={modules[1]}
+                  isAuthenticated={isAuthenticated}
+                  actor={actor}
+                  userProfile={userProfile}
+                  refreshProfile={() => fetchUserProfile(actor)}
+                />
+              }
+            />
+            <Route
+              path="/flow"
+              element={
+                <ModuleWrapper
+                  module={modules[2]}
+                  isAuthenticated={isAuthenticated}
+                  actor={actor}
+                  userProfile={userProfile}
+                  refreshProfile={() => fetchUserProfile(actor)}
+                />
+              }
+            />
+            <Route
+              path="/tickets"
+              element={
+                <ModuleWrapper
+                  module={modules[3]}
+                  isAuthenticated={isAuthenticated}
+                  actor={actor}
+                  userProfile={userProfile}
+                  refreshProfile={() => fetchUserProfile(actor)}
+                />
+              }
+            />
           </Routes>
         </main>
 
@@ -268,76 +398,8 @@ const ManashartApp = () => {
           />
         )}
       </div>
-    </Router>
-  );
-};
-
-// Navigation Card Component
-const NavigationCard = ({ module, Icon, isLocked, userVibration }) => {
-  const navigate = useNavigate();
-  
-  return (
-    <button
-      onClick={() => !isLocked && navigate(module.path)}
-      disabled={isLocked}
-      className={`
-        relative p-6 rounded-xl transition-all duration-300
-        ${isLocked 
-          ? 'bg-gray-800/50 opacity-50 cursor-not-allowed' 
-          : `bg-gradient-to-br ${module.gradient} hover:scale-105 cursor-pointer`
-        }
-      `}
-    >
-      <Icon className="w-8 h-8 mb-2 text-white" />
-      <h3 className="text-white font-semibold">{module.name}</h3>
-      <p className="text-white/70 text-xs mt-1">{module.description}</p>
-      
-      {isLocked && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-xl">
-          <div className="text-center">
-            <p className="text-white/70 text-sm">Requires {module.vibrationRequired}Hz</p>
-            <p className="text-white/50 text-xs">Current: {userVibration}Hz</p>
-          </div>
-        </div>
-      )}
-    </button>
-  );
-};
-
-// Module Wrapper Component
-const ModuleWrapper = ({ module, isAuthenticated, actor, userProfile, refreshProfile }) => {
-  const Component = module.component;
-  
-  if (!isAuthenticated) {
-    return (
-      <div className="text-center py-20">
-        <h2 className="text-3xl font-bold text-white mb-4">Authentication Required</h2>
-        <p className="text-white/70">Please login to access {module.name}</p>
-      </div>
     );
-  }
-  
-  if (userProfile && userProfile.vibration < module.vibrationRequired) {
-    return (
-      <div className="text-center py-20">
-        <h2 className="text-3xl font-bold text-white mb-4">Insufficient Vibration</h2>
-        <p className="text-white/70">
-          You need {module.vibrationRequired}Hz to access {module.name}
-        </p>
-        <p className="text-white/50 mt-2">
-          Current vibration: {userProfile.vibration}Hz
-        </p>
-      </div>
-    );
-  }
-  
-  return (
-    <Component 
-      actor={actor} 
-      userProfile={userProfile}
-      refreshProfile={refreshProfile}
-    />
-  );
 };
 
 export default ManashartApp;
+

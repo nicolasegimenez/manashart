@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, User, Briefcase } from 'lucide-react';
+import { Home, User, Briefcase, Ticket } from 'lucide-react';
 
 const Universe = ({ userProfile }) => {
   const navigate = useNavigate();
@@ -9,7 +9,7 @@ const Universe = ({ userProfile }) => {
     {
       name: 'Soul',
       icon: User,
-      path: '/soul',
+      path: '/app/soul',
       color: 'from-pink-500 to-purple-500',
       description: 'Your digital identity',
       vibrationRequired: 0,
@@ -18,10 +18,19 @@ const Universe = ({ userProfile }) => {
     {
       name: 'Flow',
       icon: Briefcase,
-      path: '/flow',
+      path: '/app/flow',
       color: 'from-blue-500 to-cyan-500',
       description: 'Creative projects',
       vibrationRequired: 60,
+      size: 'large'
+    },
+    {
+      name: 'Tickets',
+      icon: Ticket,
+      path: '/app/tickets',
+      color: 'from-green-500 to-teal-500',
+      description: 'Crypto ticketing',
+      vibrationRequired: 40,
       size: 'large'
     }
   ];
@@ -40,12 +49,12 @@ const Universe = ({ userProfile }) => {
         </div>
 
         {/* Orbiting Modules */}
-        <div className="relative w-[500px] h-[500px]">
+        <div className="relative w-[600px] h-[600px]">
           {modules.map((module, index) => {
             const Icon = module.icon;
             const isLocked = userVibration < module.vibrationRequired;
-            const angle = (index * 180) - 90; // Position at 180 degrees apart
-            const radius = 200;
+            const angle = (index * 120) - 90; // Position at 120 degrees apart for 3 modules
+            const radius = 220;
             const x = Math.cos((angle * Math.PI) / 180) * radius;
             const y = Math.sin((angle * Math.PI) / 180) * radius;
 
@@ -111,7 +120,7 @@ const Universe = ({ userProfile }) => {
         {/* User Info */}
         {userProfile && (
           <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-center">
-            <p className="text-white/70">
+            <p className="text-white/70 text-sm">
               Current Vibration: <span className="text-purple-400 font-bold">{userVibration}Hz</span>
             </p>
           </div>

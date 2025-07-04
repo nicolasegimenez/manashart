@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Basic styling to ensure visibility */
 body {
   background-color: #1a1a1a;
