@@ -7,8 +7,10 @@ import Universe from './modules/Universe';
 import SoulProfile from './modules/SoulProfile';
 import ProjectManager from './modules/ProjectManager';
 import CryptoTickets from './modules/CryptoTickets';
+import Wallet from './modules/wallet';
 import Debug from './components/Debug';
-import { Home, User, Briefcase, Ticket } from 'lucide-react';
+import { EventsProvider } from './contexts/EventsContext';
+import { Home, User, Briefcase, Ticket, Wallet as WalletIcon } from 'lucide-react';
 
 // Navigation Card Component
 const NavigationCard = ({ module, Icon, isLocked, userVibration }) => {
@@ -88,7 +90,7 @@ const ManashartApp = () => {
   const [showDebug, setShowDebug] = useState(false);
   const [activityLog, setActivityLog] = useState([]);
 
-  // Define the four modules we need
+  // Define the five modules we need
   const modules = [
     {
       name: 'Universe',
@@ -116,6 +118,15 @@ const ManashartApp = () => {
       vibrationRequired: 60,
       component: ProjectManager,
       description: 'Manage your creative projects'
+    },
+    {
+      name: 'Wallet',
+      icon: WalletIcon,
+      path: '/app/wallet',
+      gradient: 'from-emerald-600 to-teal-600',
+      vibrationRequired: 65,
+      component: Wallet,
+      description: 'Multi-chain wallet with ChainFusion'
     },
     {
       name: 'Tickets',
@@ -257,6 +268,7 @@ const ManashartApp = () => {
   };
 
   return (
+    <EventsProvider>
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
         {/* Navigation Header */}
         <nav className="bg-black/30 backdrop-blur-xl border-b border-white/10">
@@ -361,10 +373,22 @@ const ManashartApp = () => {
               }
             />
             <Route
-              path="/tickets"
+              path="/wallet"
               element={
                 <ModuleWrapper
                   module={modules[3]}
+                  isAuthenticated={isAuthenticated}
+                  actor={actor}
+                  userProfile={userProfile}
+                  refreshProfile={() => fetchUserProfile(actor)}
+                />
+              }
+            />
+            <Route
+              path="/tickets"
+              element={
+                <ModuleWrapper
+                  module={modules[4]}
                   isAuthenticated={isAuthenticated}
                   actor={actor}
                   userProfile={userProfile}
@@ -398,6 +422,7 @@ const ManashartApp = () => {
           />
         )}
       </div>
+    </EventsProvider>
     );
 };
 

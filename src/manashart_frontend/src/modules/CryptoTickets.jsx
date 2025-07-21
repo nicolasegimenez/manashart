@@ -1,75 +1,22 @@
 import React, { useState } from 'react';
+import { useEvents } from '../contexts/EventsContext';
 import { Calendar, Clock, MapPin, Users, Zap, Bitcoin, Ticket, Star, ShoppingCart } from 'lucide-react';
 
 const CryptoTickets = ({ userProfile, actor }) => {
+  const { events, loading, purchaseTickets } = useEvents();
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedTickets, setSelectedTickets] = useState({});
   const [showPayment, setShowPayment] = useState(false);
 
-  // Mock events data
-  const events = [
-    {
-      id: 1,
-      title: "Conscious Music Festival",
-      subtitle: "Elevate Your Frequency",
-      date: "2025-08-15",
-      time: "18:00",
-      location: "Cosmic Arena, Buenos Aires",
-      image: "/api/placeholder/400/300",
-      category: "Music",
-      vibrationLevel: 85,
-      maxCapacity: 5000,
-      sold: 3200,
-      prices: {
-        general: { icp: 0.5, btc: 0.00001, eth: 0.0003 },
-        vip: { icp: 1.2, btc: 0.000025, eth: 0.0007 },
-        cosmic: { icp: 2.5, btc: 0.00005, eth: 0.0015 }
-      },
-      description: "Una experiencia sonora que eleva tu conciencia a través de frecuencias conscientes.",
-      artists: ["Cosmic Beats", "Frequency Healers", "Digital Shamans"],
-      features: ["Instalación inmersiva", "Healing Station", "Crypto Bar"]
-    },
-    {
-      id: 2,
-      title: "NFT Art Exhibition",
-      subtitle: "Digital Consciousness",
-      date: "2025-07-22",
-      time: "19:30",
-      location: "Meta Gallery, Palermo",
-      image: "/api/placeholder/400/300",
-      category: "Art",
-      vibrationLevel: 70,
-      maxCapacity: 300,
-      sold: 150,
-      prices: {
-        general: { icp: 0.3, btc: 0.000008, eth: 0.0002 },
-        collector: { icp: 0.8, btc: 0.00002, eth: 0.0005 }
-      },
-      description: "Explora la intersección entre arte digital y espiritualidad.",
-      artists: ["Digital Mystics", "Crypto Artists Collective"],
-      features: ["Mint Live", "AR Experience", "Meditation Corner"]
-    },
-    {
-      id: 3,
-      title: "Blockchain Meditation",
-      subtitle: "Mindful Technology",
-      date: "2025-08-01",
-      time: "20:00",
-      location: "Quantum Space, Recoleta",
-      image: "/api/placeholder/400/300",
-      category: "Wellness",
-      vibrationLevel: 95,
-      maxCapacity: 100,
-      sold: 45,
-      prices: {
-        general: { icp: 0.8, btc: 0.00002, eth: 0.0005 },
-        premium: { icp: 1.5, btc: 0.000035, eth: 0.0009 }
-      },
-      description: "Sesión de meditación colectiva potenciada por tecnología blockchain.",
-      artists: ["Cyber Monks", "Tech Gurus"],
-      features: ["Binaural Beats", "Chakra Alignment", "Digital Detox"]
-    }
-  ];
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
+        <div className="text-white text-xl">Cargando eventos...</div>
+      </div>
+    );
+  }
+
 
   const cryptoIcons = {
     icp: "◊",
@@ -321,9 +268,15 @@ const CryptoTickets = ({ userProfile, actor }) => {
                 </button>
                 <button
                   onClick={() => {
-                    alert('¡Compra realizada con éxito! Los tickets se enviaron a tu wallet.');
-                    setShowPayment(false);
-                    setSelectedTickets({});
+                    try {
+                      const tickets = selectedTickets[selectedEvent.id] || {};
+                      purchaseTickets(selectedEvent.id, tickets);
+                      alert('¡Compra realizada con éxito! Los tickets se enviaron a tu wallet.');
+                      setShowPayment(false);
+                      setSelectedTickets({});
+                    } catch (error) {
+                      alert(`Error: ${error.message}`);
+                    }
                   }}
                   className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
                 >
